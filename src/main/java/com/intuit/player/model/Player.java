@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -17,7 +18,12 @@ import java.util.Date;
 @Entity
 @Table(name = "players")
 @Data
+@NoArgsConstructor
 public class Player {
+    public Player(String playerID) {
+        setPlayerID(playerID);
+    }
+
     @Id
     @CsvBindByName(column = "playerID")
     private String playerID;

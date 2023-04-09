@@ -1,6 +1,7 @@
 package com.intuit.player.controller;
 
 import com.intuit.player.PlayerConstants;
+import com.intuit.player.exception.EntityNotFoundException;
 import com.intuit.player.model.Player;
 import com.intuit.player.service.PlayerService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,26 +42,21 @@ public class PlayerController implements PlayerControllerIfc {
     @Override
     public ResponseEntity<Player> getPlayerById(@PathVariable(value = PlayerConstants.PLAYER_ID) String id) {
         log.info("Fetching specific player according to ID " + id);
-        Player player = playerService.getPlayerById(id);
-        return ResponseEntity.ok(player);
-    }
-
-    @PostMapping(PlayerConstants.PLAYER_ID_URI_PARAM)
-    @Override
-    public ResponseEntity<Player> createPlayer(@PathVariable(value = PlayerConstants.PLAYER_ID) String id, RequestEntity<Player> requestEntity) {
-        log.info("Creating new player with following id" + id);
-        Player player = playerService.savePlayer(requestEntity.getBody());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/players/" + player.getPlayerID()));
-        return new ResponseEntity<>(player, httpHeaders, HttpStatus.CREATED);
+        try {
+            Player player = playerService.getPlayerById(id);
+            return ResponseEntity.ok(player);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping()
     @Override
-    public ResponseEntity<List<Player>> createPlayers(RequestEntity<List<Player>> requestEntities) {
-        log.info("Creating new players");
-        List<Player> players = playerService.savePlayers(requestEntities.getBody());
+    public ResponseEntity<Player> createPlayer(RequestEntity<Player> requestEntity) {
+        log.info("Creating a new player");
+        Player player = playerService.savePlayer(requestEntity.getBody());
         HttpHeaders httpHeaders = new HttpHeaders();
-        return new ResponseEntity<>(players, httpHeaders, HttpStatus.CREATED);
+        httpHeaders.setLocation(URI.create("/players/" + player.getPlayerID()));
+        return new ResponseEntity<>(player, httpHeaders, HttpStatus.CREATED);
     }
 }

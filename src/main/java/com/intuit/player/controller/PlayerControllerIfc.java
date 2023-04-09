@@ -5,7 +5,6 @@ import com.intuit.player.model.Player;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface PlayerControllerIfc {
     /**
      * Get all players data
      *
-     * @return ResponseEntity<List<Player>>
+     * @return ResponseEntity<List < Player>>
      */
     ResponseEntity<List<Player>> getPlayers();
 
@@ -32,12 +31,9 @@ public interface PlayerControllerIfc {
 
     /**
      * Create new player
-     * @param id String id
+     *
      * @param requestEntity RequestEntity<Player>
      * @return ResponseEntity<Player>
      */
-    ResponseEntity<Player> createPlayer(@PathVariable(value = PlayerConstants.PLAYER_ID) String id, RequestEntity<Player> requestEntity);
-
-    @PostMapping()
-    ResponseEntity<List<Player>> createPlayers(RequestEntity<List<Player>> requestEntities);
+    ResponseEntity<Player> createPlayer(RequestEntity<Player> requestEntity);
 }
